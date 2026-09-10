@@ -296,12 +296,9 @@ textarea {
 }
 
 .loginWrap img.loginLogo {
-  height: 76px;
+  height: 84px;
   width: auto;
   margin-bottom: 22px;
-  background: var(--paper);
-  border-radius: 12px;
-  padding: 10px 14px;
 }
 
 .loginWrap h1 {
