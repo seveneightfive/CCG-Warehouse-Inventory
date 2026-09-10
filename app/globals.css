@@ -1,0 +1,369 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+  /* Ad Astra: night sky navy, marquee teal, gold stars */
+  --ink: #10131c;
+  --ink-soft: #545b6b;
+  --paper: #ffffff;
+  --surface: #f5f6f8;
+  --line: #e1e3e8;
+  --primary: #12798a;
+  --primary-ink: #ffffff;
+  --flag: #e7a93d;
+  --flag-ink: #10131c;
+  --success: #5B3E96;
+  --danger: #c0392b;
+  --radius: 6px;
+  --tap: 48px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Inter", -apple-system, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  max-width: 640px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid var(--flag);
+}
+
+.topbar .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar .brand img {
+  height: 26px;
+  width: auto;
+  display: block;
+}
+
+.topbar .storeName {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.03em;
+  line-height: 1;
+}
+
+.topbar a.back {
+  color: var(--paper);
+  text-decoration: none;
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.content {
+  padding: 18px 16px;
+  padding-bottom: 100px;
+}
+
+.pageTitle {
+  font-size: 30px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.pageSub {
+  color: var(--ink-soft);
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+
+.tabRow {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 18px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tab {
+  flex: 0 0 auto;
+  padding: 11px 14px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tab.active {
+  color: var(--ink);
+  border-bottom-color: var(--primary);
+}
+
+.card {
+  display: block;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 6px solid var(--ink-soft);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  text-decoration: none;
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgba(16, 19, 28, 0.04);
+}
+
+.card.flagged {
+  border-left-color: var(--flag);
+  background: #fffaf0;
+}
+
+.card.sold {
+  border-left-color: var(--success);
+}
+
+.card .sku {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+  margin-bottom: 3px;
+}
+
+.card .title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  line-height: 1.25;
+}
+
+.card .meta {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 12px;
+  align-items: center;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 56px 16px;
+  color: var(--ink-soft);
+  font-size: 15px;
+}
+
+.field {
+  margin-bottom: 18px;
+}
+
+.field label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  margin-bottom: 7px;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: var(--tap);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+  border-color: var(--primary);
+}
+
+.field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap);
+  padding: 0 22px;
+  background: var(--primary);
+  color: var(--primary-ink);
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 700;
+  font-size: 15.5px;
+  cursor: pointer;
+  width: 100%;
+  text-decoration: none;
+}
+
+.btn.secondary {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+}
+
+.btn.flag {
+  background: var(--flag);
+  color: var(--flag-ink);
+}
+
+.fab {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 608px;
+  z-index: 20;
+  box-shadow: 0 4px 16px rgba(16, 19, 28, 0.25);
+}
+
+.statusPill {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.loginWrap {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  background: var(--ink);
+  color: var(--paper);
+  text-align: center;
+}
+
+.loginWrap img.loginLogo {
+  height: 76px;
+  width: auto;
+  margin-bottom: 22px;
+  background: var(--paper);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+
+.loginWrap h1 {
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  margin-bottom: 8px;
+  color: var(--paper);
+  max-width: 320px;
+}
+
+.loginWrap p {
+  color: #b6bac3;
+  margin-bottom: 26px;
+  font-size: 14px;
+}
+
+.loginWrap form {
+  width: 100%;
+  max-width: 320px;
+}
+
+.loginWrap .field input {
+  background: #1c2030;
+  border-color: #363b4d;
+  color: var(--paper);
+}
+
+.error {
+  color: #ff8a75;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.navGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.navGrid a {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  text-decoration: none;
+  color: var(--ink);
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+}
+
+.navGrid a small {
+  display: block;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-top: 5px;
+  letter-spacing: 0;
+}
