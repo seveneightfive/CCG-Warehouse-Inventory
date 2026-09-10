@@ -1,6 +1,7 @@
 import Link from "next/link";
 import TopBar from "../../../components/TopBar";
 import GameEditForm from "../../../components/GameEditForm";
+import QuickFillForm from "../../../components/QuickFillForm";
 import {
   getRecord,
   listRecords,
@@ -31,6 +32,30 @@ export default async function GameDetailPage({ params }) {
   const customer = resolveNames(f[INVENTORY_FIELDS.customer], customerMap);
   const sourceType = f[INVENTORY_FIELDS.sourceType];
 
+  let ownerLine = "";
+  if (sourceType === "Customer Repair") {
+    ownerLine = customer.join(", ") || "Customer repair";
+  } else if (sourceType === "In-House Purchase") {
+    ownerLine = "CCG (in-house)";
+  } else {
+    ownerLine = consignor.join(", ") || f[INVENTORY_FIELDS.skuPrefix] || "Consignment";
+  }
+
+  // A placeholder label hasn't had a real game entered against it yet —
+  // show the fast confirm-and-fill form instead of the full edit screen.
+  if (f[INVENTORY_FIELDS.placeholder]) {
+    return (
+      <>
+        <TopBar backHref="/labels/fill" backLabel="← Fill In Games" />
+        <div className="content">
+          <h1 className="pageTitle">New Game</h1>
+          <p className="pageSub">This label hasn't been assigned to a game yet.</p>
+          <QuickFillForm record={record} ownerLabel={ownerLine} />
+        </div>
+      </>
+    );
+  }
+
   const locationOptions = locations.map((l) => ({
     id: l.id,
     name: l.fields[LOCATION_FIELDS.name] || "(unnamed)",
@@ -39,15 +64,6 @@ export default async function GameDetailPage({ params }) {
     id: c.id,
     name: c.fields[CONSIGNOR_FIELDS.name] || "(unnamed)",
   }));
-
-  let ownerLine = "";
-  if (sourceType === "Customer Repair") {
-    ownerLine = customer.join(", ") || "Customer repair";
-  } else if (sourceType === "In-House Purchase") {
-    ownerLine = "CCG (in-house)";
-  } else {
-    ownerLine = consignor.join(", ") || "Consignment";
-  }
 
   return (
     <>
@@ -76,7 +92,8 @@ export default async function GameDetailPage({ params }) {
             <span
               className="statusPill"
               style={{
-                background: INSPECTION_OUTCOME_COLORS[f[INVENTORY_FIELDS.inspectionOutcome]].bar,
+                background:
+                  INSPECTION_OUTCOME_COLORS[f[INVENTORY_FIELDS.inspectionOutcome]].bar,
                 color: "#fff",
               }}
             >
