@@ -4,8 +4,10 @@ import {
   listRecords,
   TABLES,
   WORK_ORDER_FIELDS,
+  LOCATION_FIELDS,
+  buildNameMap,
+  resolveNames,
 } from "../../lib/airtable";
-import { flattenToStrings } from "../../lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +20,11 @@ async function getFlaggedRequests() {
 }
 
 export default async function DashboardPage() {
-  const flagged = await getFlaggedRequests();
+  const [flagged, locations] = await Promise.all([
+    getFlaggedRequests(),
+    listRecords(TABLES.locations),
+  ]);
+  const locationMap = buildNameMap(locations, LOCATION_FIELDS.name);
 
   return (
     <>
@@ -37,7 +43,7 @@ export default async function DashboardPage() {
 
         {flagged.map((r) => {
           const f = r.fields;
-          const locations = flattenToStrings(f[WORK_ORDER_FIELDS.itemLocation]);
+          const locations = resolveNames(f[WORK_ORDER_FIELDS.itemLocation], locationMap);
           return (
             <Link
               key={r.id}
@@ -73,9 +79,9 @@ export default async function DashboardPage() {
             + New Work Order
             <small>Log work or flag a request</small>
           </Link>
-          <Link href="/board?status=Just+Received">
-            Just Received
-            <small>Needs review</small>
+          <Link href="/labels">
+            Print Labels
+            <small>QR sticker sheets</small>
           </Link>
         </div>
       </div>

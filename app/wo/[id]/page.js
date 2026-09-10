@@ -1,15 +1,27 @@
 import TopBar from "../../../components/TopBar";
 import WorkOrderEditForm from "../../../components/WorkOrderEditForm";
-import { getRecord, TABLES, WORK_ORDER_FIELDS } from "../../../lib/airtable";
+import {
+  getRecord,
+  listRecords,
+  TABLES,
+  WORK_ORDER_FIELDS,
+  LOCATION_FIELDS,
+  buildNameMap,
+  resolveNames,
+} from "../../../lib/airtable";
 import { flattenToStrings, formatDate } from "../../../lib/format";
 
 export const dynamic = "force-dynamic";
 
 export default async function WorkOrderDetailPage({ params }) {
-  const record = await getRecord(TABLES.workOrders, params.id);
+  const [record, locations] = await Promise.all([
+    getRecord(TABLES.workOrders, params.id),
+    listRecords(TABLES.locations),
+  ]);
+  const locationMap = buildNameMap(locations, LOCATION_FIELDS.name);
   const f = record.fields;
   const game = flattenToStrings(f["Inventory Item"]);
-  const location = flattenToStrings(f[WORK_ORDER_FIELDS.itemLocation]);
+  const location = resolveNames(f[WORK_ORDER_FIELDS.itemLocation], locationMap);
   const flagged = !!f[WORK_ORDER_FIELDS.flaggedByBoss];
 
   return (

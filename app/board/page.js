@@ -5,8 +5,12 @@ import {
   TABLES,
   INVENTORY_FIELDS,
   STATUS_CHOICES,
+  CONSIGNOR_FIELDS,
+  LOCATION_FIELDS,
+  buildNameMap,
+  resolveNames,
 } from "../../lib/airtable";
-import { flattenToStrings, formatDate } from "../../lib/format";
+import { formatDate } from "../../lib/format";
 import { statusColor, INVENTORY_STATUS_COLORS } from "../../lib/statusColors";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +22,14 @@ export default async function BoardPage({ searchParams }) {
     ? `{Status} = "${activeStatus}"`
     : `{Status} != "Sold"`;
 
-  const records = await listRecords(TABLES.inventory, { filterByFormula });
+  const [records, consignors, locations] = await Promise.all([
+    listRecords(TABLES.inventory, { filterByFormula }),
+    listRecords(TABLES.consignors),
+    listRecords(TABLES.locations),
+  ]);
+  const consignorMap = buildNameMap(consignors, CONSIGNOR_FIELDS.name);
+  const locationMap = buildNameMap(locations, LOCATION_FIELDS.name);
+
   records.sort((a, b) => {
     const da = a.fields[INVENTORY_FIELDS.dateReceived] || "";
     const db = b.fields[INVENTORY_FIELDS.dateReceived] || "";
@@ -59,8 +70,8 @@ export default async function BoardPage({ searchParams }) {
 
         {records.map((r) => {
           const f = r.fields;
-          const consignor = flattenToStrings(f[INVENTORY_FIELDS.consignor]);
-          const location = flattenToStrings(f[INVENTORY_FIELDS.location]);
+          const consignor = resolveNames(f[INVENTORY_FIELDS.consignor], consignorMap);
+          const location = resolveNames(f[INVENTORY_FIELDS.location], locationMap);
           const status = f[INVENTORY_FIELDS.status];
           const c = statusColor(status, INVENTORY_STATUS_COLORS);
           return (

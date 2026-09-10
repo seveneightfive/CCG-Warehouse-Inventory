@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { INVENTORY_FIELDS, STATUS_CHOICES } from "../lib/airtable";
 import { patchRecord } from "../lib/clientApi";
 import { readWhoFromDocument } from "../lib/whoami";
+import PhotoCapture from "./PhotoCapture";
 
 export default function GameEditForm({ record, locations }) {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function GameEditForm({ record, locations }) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const showLocation = status === "On Route" || status === "On Location";
+  const existingPhoto = f[INVENTORY_FIELDS.photo]?.[0]?.url;
 
   async function handleSave(e) {
     e.preventDefault();
@@ -32,7 +33,7 @@ export default function GameEditForm({ record, locations }) {
       await patchRecord("inventory", record.id, {
         [INVENTORY_FIELDS.status]: status,
         [INVENTORY_FIELDS.description]: description,
-        [INVENTORY_FIELDS.location]: showLocation ? locationIds : [],
+        [INVENTORY_FIELDS.location]: locationIds,
         [INVENTORY_FIELDS.lastUpdatedBy]: who?.name || "",
       });
       setSaved(true);
@@ -44,6 +45,12 @@ export default function GameEditForm({ record, locations }) {
 
   return (
     <form onSubmit={handleSave}>
+      <PhotoCapture
+        recordId={record.id}
+        existingUrl={existingPhoto}
+        onUploaded={() => router.refresh()}
+      />
+
       <div className="field">
         <label>Status</label>
         <select value={status} onChange={(e) => setStatus(e.target.value)}>
@@ -55,26 +62,24 @@ export default function GameEditForm({ record, locations }) {
         </select>
       </div>
 
-      {showLocation && (
-        <div className="field">
-          <label>Location</label>
-          <select
-            multiple
-            value={locationIds}
-            onChange={(e) =>
-              setLocationIds(
-                Array.from(e.target.selectedOptions, (o) => o.value)
-              )
-            }
-          >
-            {locations.map((loc) => (
-              <option key={loc.id} value={loc.id}>
-                {loc.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
+      <div className="field">
+        <label>Location (if on route / at a venue)</label>
+        <select
+          multiple
+          value={locationIds}
+          onChange={(e) =>
+            setLocationIds(
+              Array.from(e.target.selectedOptions, (o) => o.value)
+            )
+          }
+        >
+          {locations.map((loc) => (
+            <option key={loc.id} value={loc.id}>
+              {loc.name}
+            </option>
+          ))}
+        </select>
+      </div>
 
       <div className="field">
         <label>Notes / Description</label>
