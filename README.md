@@ -22,7 +22,7 @@ data changes; this is just a nicer front door to it.
 1. Go to https://airtable.com/create/tokens
 2. Click **Create new token**
 3. Name it something like "CCG Warehouse App"
-4. Scopes: add `data.records:read` and `data.records:write`
+4. Scopes: add `data.records:read`, `data.records:write`, and `schema.bases:read` (the last one is needed so the Brand/Manufacturer dropdown can always show your current, up-to-date list of options)
 5. Access: add the **Capital City Games & Music Inventory** base
 6. Create it, and copy the token (starts with `pat...`) — you won't see it again
 

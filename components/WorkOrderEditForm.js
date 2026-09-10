@@ -7,13 +7,18 @@ import { patchRecord } from "../lib/clientApi";
 import { readWhoFromDocument } from "../lib/whoami";
 import VoiceTextarea from "./VoiceTextarea";
 
-export default function WorkOrderEditForm({ record }) {
+export default function WorkOrderEditForm({ record, parts }) {
   const router = useRouter();
   const f = record.fields;
   const [status, setStatus] = useState(f[WORK_ORDER_FIELDS.status] || "");
   const [notes, setNotes] = useState(f[WORK_ORDER_FIELDS.notes] || "");
   const [laborHours, setLaborHours] = useState(
     f[WORK_ORDER_FIELDS.laborHours] ?? ""
+  );
+  const [partIds, setPartIds] = useState(
+    (f[WORK_ORDER_FIELDS.partsUsed] || []).map((v) =>
+      typeof v === "string" ? v : v.id
+    )
   );
   const [billToConsignor, setBillToConsignor] = useState(
     !!f[WORK_ORDER_FIELDS.billToConsignor]
@@ -41,6 +46,7 @@ export default function WorkOrderEditForm({ record }) {
         [WORK_ORDER_FIELDS.laborHours]: laborHours
           ? Number(laborHours)
           : undefined,
+        [WORK_ORDER_FIELDS.partsUsed]: partIds,
         [WORK_ORDER_FIELDS.billToConsignor]: billToConsignor,
         [WORK_ORDER_FIELDS.billAmount]: billAmount ? Number(billAmount) : undefined,
         [WORK_ORDER_FIELDS.billedConfirmed]: billedConfirmed,
@@ -79,6 +85,54 @@ export default function WorkOrderEditForm({ record }) {
           value={laborHours}
           onChange={(e) => setLaborHours(e.target.value)}
         />
+      </div>
+
+      <div className="field">
+        <label>Parts used</label>
+        <div
+          style={{
+            border: "1.5px solid var(--line)",
+            borderRadius: "var(--radius)",
+            maxHeight: 220,
+            overflowY: "auto",
+          }}
+        >
+          {parts.length === 0 && (
+            <div style={{ padding: 12, fontSize: 13, color: "var(--ink-soft)" }}>
+              No parts on file yet.
+            </div>
+          )}
+          {parts.map((p) => (
+            <label
+              key={p.id}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "10px 12px",
+                borderBottom: "1px solid var(--line)",
+                fontSize: 14,
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={partIds.includes(p.id)}
+                onChange={() =>
+                  setPartIds((prev) =>
+                    prev.includes(p.id)
+                      ? prev.filter((x) => x !== p.id)
+                      : [...prev, p.id]
+                  )
+                }
+                style={{ width: 18, height: 18 }}
+              />
+              <span style={{ flex: 1 }}>{p.name}</span>
+              <span style={{ fontSize: 12, color: p.inStock <= 2 ? "#C0392B" : "var(--ink-soft)" }}>
+                {p.inStock} in stock
+              </span>
+            </label>
+          ))}
+        </div>
       </div>
 
       {isComplete && (

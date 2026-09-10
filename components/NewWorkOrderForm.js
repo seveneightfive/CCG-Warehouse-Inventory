@@ -7,11 +7,12 @@ import { createWorkOrder } from "../lib/clientApi";
 import { readWhoFromDocument } from "../lib/whoami";
 import VoiceTextarea from "./VoiceTextarea";
 
-export default function NewWorkOrderForm({ games, staff, isBoss }) {
+export default function NewWorkOrderForm({ games, staff, parts, isBoss }) {
   const router = useRouter();
   const [gameId, setGameId] = useState("");
   const [staffId, setStaffId] = useState("");
   const [notes, setNotes] = useState("");
+  const [partIds, setPartIds] = useState([]);
   const [flagged, setFlagged] = useState(isBoss);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -26,6 +27,12 @@ export default function NewWorkOrderForm({ games, staff, isBoss }) {
     }
   }, [staff]);
 
+  function togglePart(id) {
+    setPartIds((prev) =>
+      prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
+    );
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     if (!gameId) {
@@ -39,6 +46,7 @@ export default function NewWorkOrderForm({ games, staff, isBoss }) {
         [WORK_ORDER_FIELDS.inventoryLink]: [gameId],
         [WORK_ORDER_FIELDS.staff]: staffId ? [staffId] : [],
         [WORK_ORDER_FIELDS.notes]: notes,
+        [WORK_ORDER_FIELDS.partsUsed]: partIds,
         [WORK_ORDER_FIELDS.status]: "Just Assigned",
         [WORK_ORDER_FIELDS.flaggedByBoss]: flagged,
         [WORK_ORDER_FIELDS.lastUpdatedBy]: who?.name || "",
@@ -79,6 +87,48 @@ export default function NewWorkOrderForm({ games, staff, isBoss }) {
       <div className="field">
         <label>What needs to happen</label>
         <VoiceTextarea value={notes} onChange={setNotes} placeholder="e.g. Check the marquee light, might be a bad ballast" />
+      </div>
+
+      <div className="field">
+        <label>Parts used (optional)</label>
+        <div
+          style={{
+            border: "1.5px solid var(--line)",
+            borderRadius: "var(--radius)",
+            maxHeight: 220,
+            overflowY: "auto",
+          }}
+        >
+          {parts.length === 0 && (
+            <div style={{ padding: 12, fontSize: 13, color: "var(--ink-soft)" }}>
+              No parts on file yet.
+            </div>
+          )}
+          {parts.map((p) => (
+            <label
+              key={p.id}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "10px 12px",
+                borderBottom: "1px solid var(--line)",
+                fontSize: 14,
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={partIds.includes(p.id)}
+                onChange={() => togglePart(p.id)}
+                style={{ width: 18, height: 18 }}
+              />
+              <span style={{ flex: 1 }}>{p.name}</span>
+              <span style={{ fontSize: 12, color: p.inStock <= 2 ? "#C0392B" : "var(--ink-soft)" }}>
+                {p.inStock} in stock
+              </span>
+            </label>
+          ))}
+        </div>
       </div>
 
       <label

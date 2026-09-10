@@ -6,6 +6,7 @@ import {
   TABLES,
   WORK_ORDER_FIELDS,
   LOCATION_FIELDS,
+  PART_FIELDS,
   buildNameMap,
   resolveNames,
 } from "../../../lib/airtable";
@@ -14,15 +15,24 @@ import { flattenToStrings, formatDate } from "../../../lib/format";
 export const dynamic = "force-dynamic";
 
 export default async function WorkOrderDetailPage({ params }) {
-  const [record, locations] = await Promise.all([
+  const [record, locations, partRecords] = await Promise.all([
     getRecord(TABLES.workOrders, params.id),
     listRecords(TABLES.locations),
+    listRecords(TABLES.parts),
   ]);
   const locationMap = buildNameMap(locations, LOCATION_FIELDS.name);
   const f = record.fields;
   const game = flattenToStrings(f["Inventory Item"]);
   const location = resolveNames(f[WORK_ORDER_FIELDS.itemLocation], locationMap);
   const flagged = !!f[WORK_ORDER_FIELDS.flaggedByBoss];
+
+  const partOptions = partRecords
+    .map((p) => ({
+      id: p.id,
+      name: p.fields[PART_FIELDS.name] || "(unnamed)",
+      inStock: p.fields[PART_FIELDS.inStock] ?? 0,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <>
@@ -38,8 +48,9 @@ export default async function WorkOrderDetailPage({ params }) {
             ` · Last updated by ${f[WORK_ORDER_FIELDS.lastUpdatedBy]}`}
         </p>
 
-        <WorkOrderEditForm record={record} />
+        <WorkOrderEditForm record={record} parts={partOptions} />
       </div>
     </>
   );
 }
+

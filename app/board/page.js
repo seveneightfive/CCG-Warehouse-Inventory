@@ -20,7 +20,6 @@ export const dynamic = "force-dynamic";
 
 const FILTERS = [
   { key: "all", label: "In Warehouse Now" },
-  { key: "just-received", label: "Just Received" },
   { key: "needs-attention", label: "Needs Attention" },
   { key: "ready", label: "Ready for Sale" },
   { key: "auction", label: "Going to Auction" },
@@ -114,6 +113,13 @@ export default async function BoardPage({ searchParams }) {
             </div>
             <div className="value">{counts.onLocation}</div>
           </div>
+          <div className="statCard">
+            <div className="label">
+              <span className="dot" style={{ background: "#e7a93d" }} />
+              Needs Inspection
+            </div>
+            <div className="value">{counts["just-received"]}</div>
+          </div>
         </div>
 
         <div className="pillRow">
@@ -139,6 +145,7 @@ export default async function BoardPage({ searchParams }) {
           const outcome = f[INVENTORY_FIELDS.inspectionOutcome];
           const c = statusColor(status, INVENTORY_STATUS_COLORS);
           const oc = outcome ? INSPECTION_OUTCOME_COLORS[outcome] : null;
+          const inspected = !!f[INVENTORY_FIELDS.inspectionComplete];
           return (
             <InventoryCard
               key={r.id}
@@ -152,6 +159,7 @@ export default async function BoardPage({ searchParams }) {
               outcomeColorHex={oc?.bar}
               consignorLine={consignor.join(", ")}
               locationLine={location.join(", ")}
+              inspected={inspected}
             />
           );
         })}

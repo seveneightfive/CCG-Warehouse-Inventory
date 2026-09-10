@@ -65,40 +65,96 @@ export default async function GameDetailPage({ params }) {
     name: c.fields[CONSIGNOR_FIELDS.name] || "(unnamed)",
   }));
 
+  const inspected = !!f[INVENTORY_FIELDS.inspectionComplete];
+  const printed = !!f[INVENTORY_FIELDS.detailsSheetPrinted];
+  const outcome = f[INVENTORY_FIELDS.inspectionOutcome];
+
   return (
     <>
       <TopBar title="Game Details" backHref="/board" backLabel="Inventory" />
       <div className="content">
-        <div className="sku">{f[INVENTORY_FIELDS.sku]}</div>
-        <h1 className="pageTitle">{f[INVENTORY_FIELDS.title]}</h1>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            gap: 10,
+          }}
+        >
+          <div style={{ minWidth: 0 }}>
+            <div className="sku">{f[INVENTORY_FIELDS.sku]}</div>
+            <h1 className="pageTitle" style={{ wordBreak: "break-word" }}>
+              {f[INVENTORY_FIELDS.title]}
+            </h1>
+          </div>
+          <Link
+            href={`/game/${record.id}/inspect`}
+            className="statusPill"
+            style={{
+              background: inspected ? "var(--surface-2)" : "var(--flag)",
+              color: inspected ? "var(--ink)" : "var(--flag-ink)",
+              flex: "0 0 auto",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {inspected ? "Inspection complete" : "Do initial inspection"}
+          </Link>
+        </div>
+
         <p className="pageSub">
           {ownerLine} · Received {formatDate(f[INVENTORY_FIELDS.dateReceived])}
           {f[INVENTORY_FIELDS.lastUpdatedBy] &&
             ` · Last updated by ${f[INVENTORY_FIELDS.lastUpdatedBy]}`}
         </p>
 
-        <Link
-          href={`/game/${record.id}/inspect`}
-          className={`btn ${f[INVENTORY_FIELDS.inspectionComplete] ? "secondary" : "flag"}`}
-          style={{ marginBottom: 10 }}
-        >
-          {f[INVENTORY_FIELDS.inspectionComplete]
-            ? "Inspection complete — edit"
-            : "Start inspection"}
-        </Link>
-
-        {f[INVENTORY_FIELDS.inspectionOutcome] && (
-          <div style={{ marginBottom: 20 }}>
+        <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 20 }}>
+          {outcome && (
             <span
               className="statusPill"
               style={{
-                background:
-                  INSPECTION_OUTCOME_COLORS[f[INVENTORY_FIELDS.inspectionOutcome]].bar,
+                background: INSPECTION_OUTCOME_COLORS[outcome].bar,
                 color: "#fff",
               }}
             >
-              {f[INVENTORY_FIELDS.inspectionOutcome]}
+              {outcome}
             </span>
+          )}
+          <Link
+            href={`/game/${record.id}/print`}
+            className="statusPill"
+            style={{
+              background: printed ? "var(--surface-2)" : "var(--ink)",
+              color: printed ? "var(--ink)" : "#fff",
+              textDecoration: "none",
+            }}
+            title={printed ? "Sheet has been printed" : "Not printed yet"}
+          >
+            {printed ? "Print sheet ✓" : "Print sheet — not yet printed"}
+          </Link>
+        </div>
+
+        {inspected && (
+          <div
+            style={{
+              background: "var(--surface)",
+              border: "1px solid var(--line)",
+              borderRadius: "var(--radius)",
+              padding: 14,
+              marginBottom: 20,
+              fontSize: 13.5,
+            }}
+          >
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              <div><b>Condition:</b> {f[INVENTORY_FIELDS.condition] || "—"}</div>
+              <div><b>Dedicated:</b> {f[INVENTORY_FIELDS.dedicatedCabinet] ? "Yes" : "No"}</div>
+              <div><b>Brand:</b> {f[INVENTORY_FIELDS.brand] || "—"}</div>
+              <div><b>Serial #:</b> {f[INVENTORY_FIELDS.serialNumber] || "—"}</div>
+            </div>
+            {f[INVENTORY_FIELDS.conditionNotes] && (
+              <div style={{ marginTop: 8 }}>
+                <b>Condition notes:</b> {f[INVENTORY_FIELDS.conditionNotes]}
+              </div>
+            )}
           </div>
         )}
 

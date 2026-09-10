@@ -18,6 +18,7 @@ export default function InventoryCard({
   outcomeColorHex,
   consignorLine,
   locationLine,
+  inspected,
 }) {
   const router = useRouter();
   const [currentStatus, setCurrentStatus] = useState(status);
@@ -70,19 +71,30 @@ export default function InventoryCard({
             {outcome}
           </span>
         )}
-        <span
-          className="quickStatus"
-          onClick={(e) => e.stopPropagation()}
-          style={{ marginLeft: "auto" }}
-        >
-          <select value={currentStatus} onChange={handleStatusChange} disabled={saving}>
-            {STATUS_CHOICES.map((s) => (
-              <option key={s.name} value={s.name}>
-                {s.name}
-              </option>
-            ))}
-          </select>
-        </span>
+        {inspected ? (
+          <span
+            className="quickStatus"
+            onClick={(e) => e.stopPropagation()}
+            style={{ marginLeft: "auto" }}
+          >
+            <select value={currentStatus} onChange={handleStatusChange} disabled={saving}>
+              {STATUS_CHOICES.map((s) => (
+                <option key={s.name} value={s.name}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+          </span>
+        ) : (
+          <Link
+            href={`/game/${id}/inspect`}
+            className="statusPill"
+            style={{ marginLeft: "auto", background: "var(--flag)", color: "var(--flag-ink)" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            Do initial inspection
+          </Link>
+        )}
       </div>
     </div>
   );

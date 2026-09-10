@@ -52,34 +52,36 @@ export default function GameEditForm({ record, locations }) {
         onUploaded={() => router.refresh()}
       />
 
-      <div className="field">
-        <label>Status</label>
-        <select value={status} onChange={(e) => setStatus(e.target.value)}>
-          {STATUS_CHOICES.map((s) => (
-            <option key={s.name} value={s.name}>
-              {s.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <div style={{ display: "flex", gap: 12 }}>
+        <div className="field" style={{ flex: 1 }}>
+          <label>Status</label>
+          <select value={status} onChange={(e) => setStatus(e.target.value)}>
+            {STATUS_CHOICES.map((s) => (
+              <option key={s.name} value={s.name}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <div className="field">
-        <label>Location (if on route / at a venue)</label>
-        <select
-          multiple
-          value={locationIds}
-          onChange={(e) =>
-            setLocationIds(
-              Array.from(e.target.selectedOptions, (o) => o.value)
-            )
-          }
-        >
-          {locations.map((loc) => (
-            <option key={loc.id} value={loc.id}>
-              {loc.name}
-            </option>
-          ))}
-        </select>
+        <div className="field" style={{ flex: 1 }}>
+          <label>Location</label>
+          <select
+            multiple
+            value={locationIds}
+            onChange={(e) =>
+              setLocationIds(
+                Array.from(e.target.selectedOptions, (o) => o.value)
+              )
+            }
+          >
+            {locations.map((loc) => (
+              <option key={loc.id} value={loc.id}>
+                {loc.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="field">

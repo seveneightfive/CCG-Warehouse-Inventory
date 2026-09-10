@@ -2,17 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { INVENTORY_FIELDS, BRAND_CHOICES, INSPECTION_OUTCOME_CHOICES } from "../lib/airtable";
+import { INVENTORY_FIELDS } from "../lib/airtable";
 import { patchRecord } from "../lib/clientApi";
 import { readWhoFromDocument } from "../lib/whoami";
 import VoiceTextarea from "./VoiceTextarea";
 
-export default function InspectionForm({ record }) {
+export default function InspectionForm({ record, brandChoices }) {
   const router = useRouter();
   const f = record.fields;
 
   const existingBrand = f[INVENTORY_FIELDS.brand] || "";
-  const isKnownBrand = !existingBrand || BRAND_CHOICES.includes(existingBrand);
+  const isKnownBrand = !existingBrand || brandChoices.includes(existingBrand);
 
   const [condition, setCondition] = useState(f[INVENTORY_FIELDS.condition] || "Used");
   const [dedicated, setDedicated] = useState(!!f[INVENTORY_FIELDS.dedicatedCabinet]);
@@ -53,7 +53,7 @@ export default function InspectionForm({ record }) {
         [INVENTORY_FIELDS.inspectionOutcome]: outcome,
         [INVENTORY_FIELDS.lastUpdatedBy]: who?.name || "",
       });
-      router.push(`/game/${record.id}`);
+      router.push("/board");
     } catch {
       setError("Couldn't save. Try again.");
       setSaving(false);
@@ -95,7 +95,7 @@ export default function InspectionForm({ record }) {
           onChange={(e) => setBrandChoice(e.target.value)}
         >
           <option value="">Select…</option>
-          {BRAND_CHOICES.map((b) => (
+          {brandChoices.map((b) => (
             <option key={b} value={b}>
               {b}
             </option>

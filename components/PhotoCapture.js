@@ -31,30 +31,53 @@ export default function PhotoCapture({ recordId, existingUrl, onUploaded }) {
   }
 
   return (
-    <div className="field">
-      <label>Photo</label>
-      {preview && (
-        <img
-          src={preview}
-          alt="Game photo"
-          style={{
-            width: "100%",
-            maxHeight: 220,
-            objectFit: "cover",
-            borderRadius: "var(--radius)",
-            marginBottom: 10,
-            border: "1px solid var(--line)",
-          }}
-        />
+    <div className="field" style={{ position: "relative" }}>
+      {preview ? (
+        <div style={{ position: "relative", display: "inline-block" }}>
+          <img
+            src={preview}
+            alt="Game photo"
+            style={{
+              width: 160,
+              height: 160,
+              objectFit: "cover",
+              borderRadius: "var(--radius)",
+              border: "1px solid var(--line)",
+              display: "block",
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={uploading}
+            style={{
+              position: "absolute",
+              bottom: 6,
+              right: 6,
+              fontSize: 11,
+              fontWeight: 600,
+              padding: "4px 9px",
+              borderRadius: 999,
+              border: "none",
+              background: "rgba(16,19,28,0.75)",
+              color: "#fff",
+              cursor: "pointer",
+            }}
+          >
+            {uploading ? "…" : "Retake"}
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          className="btn secondary"
+          onClick={() => inputRef.current?.click()}
+          disabled={uploading}
+          style={{ width: "auto", padding: "0 16px" }}
+        >
+          {uploading ? "Uploading…" : "Take photo"}
+        </button>
       )}
-      <button
-        type="button"
-        className="btn secondary"
-        onClick={() => inputRef.current?.click()}
-        disabled={uploading}
-      >
-        {uploading ? "Uploading…" : preview ? "Retake photo" : "Take photo"}
-      </button>
       <input
         ref={inputRef}
         type="file"
