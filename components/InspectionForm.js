@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { INVENTORY_FIELDS, BRAND_CHOICES } from "../lib/airtable";
+import { INVENTORY_FIELDS, BRAND_CHOICES, INSPECTION_OUTCOME_CHOICES } from "../lib/airtable";
 import { patchRecord } from "../lib/clientApi";
 import { readWhoFromDocument } from "../lib/whoami";
 
@@ -23,6 +23,7 @@ export default function InspectionForm({ record }) {
   );
   const [customBrand, setCustomBrand] = useState(isKnownBrand ? "" : existingBrand);
   const [serialNumber, setSerialNumber] = useState(f[INVENTORY_FIELDS.serialNumber] || "");
+  const [outcome, setOutcome] = useState(f[INVENTORY_FIELDS.inspectionOutcome] || "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -31,6 +32,10 @@ export default function InspectionForm({ record }) {
     const finalBrand = brandChoice === "__other__" ? customBrand.trim() : brandChoice;
     if (!finalBrand) {
       setError("Pick or type a brand / manufacturer.");
+      return;
+    }
+    if (!outcome) {
+      setError("Pick an outcome before finishing.");
       return;
     }
     setSaving(true);
@@ -44,6 +49,7 @@ export default function InspectionForm({ record }) {
         [INVENTORY_FIELDS.brand]: finalBrand,
         [INVENTORY_FIELDS.serialNumber]: serialNumber,
         [INVENTORY_FIELDS.inspectionComplete]: true,
+        [INVENTORY_FIELDS.inspectionOutcome]: outcome,
         [INVENTORY_FIELDS.lastUpdatedBy]: who?.name || "",
       });
       router.push(`/game/${record.id}`);
@@ -121,6 +127,36 @@ export default function InspectionForm({ record }) {
           onChange={(e) => setConditionNotes(e.target.value)}
           placeholder="Wear, missing parts, anything worth flagging"
         />
+      </div>
+
+      <div className="field">
+        <label>Outcome</label>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <button
+            type="button"
+            onClick={() => setOutcome("Needs Attention")}
+            className="btn"
+            style={{
+              background: outcome === "Needs Attention" ? "#C0392B" : "var(--surface)",
+              color: outcome === "Needs Attention" ? "#fff" : "var(--ink)",
+              border: "1.5px solid #C0392B",
+            }}
+          >
+            Needs attention
+          </button>
+          <button
+            type="button"
+            onClick={() => setOutcome("Ready to Clean & Photograph")}
+            className="btn"
+            style={{
+              background: outcome === "Ready to Clean & Photograph" ? "#2F8F5B" : "var(--surface)",
+              color: outcome === "Ready to Clean & Photograph" ? "#fff" : "var(--ink)",
+              border: "1.5px solid #2F8F5B",
+            }}
+          >
+            Ready to be cleaned and photographed
+          </button>
+        </div>
       </div>
 
       {error && <p className="error">{error}</p>}

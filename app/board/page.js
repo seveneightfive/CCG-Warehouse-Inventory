@@ -11,16 +11,26 @@ import {
   resolveNames,
 } from "../../lib/airtable";
 import { formatDate } from "../../lib/format";
-import { statusColor, INVENTORY_STATUS_COLORS } from "../../lib/statusColors";
+import {
+  statusColor,
+  INVENTORY_STATUS_COLORS,
+  INSPECTION_OUTCOME_COLORS,
+} from "../../lib/statusColors";
 
 export const dynamic = "force-dynamic";
 
 export default async function BoardPage({ searchParams }) {
   const activeStatus = searchParams?.status || "";
+  const needsAttention = searchParams?.attention === "1";
 
-  const filterByFormula = activeStatus
-    ? `{Status} = "${activeStatus}"`
-    : `{Status} != "Sold"`;
+  let filterByFormula;
+  if (needsAttention) {
+    filterByFormula = `{Inspection Outcome} = "Needs Attention"`;
+  } else if (activeStatus) {
+    filterByFormula = `{Status} = "${activeStatus}"`;
+  } else {
+    filterByFormula = `{Status} != "Sold"`;
+  }
 
   const [records, consignors, locations] = await Promise.all([
     listRecords(TABLES.inventory, { filterByFormula }),
@@ -42,22 +52,31 @@ export default async function BoardPage({ searchParams }) {
       <div className="content">
         <h1 className="pageTitle">Inventory</h1>
         <p className="pageSub">
-          {activeStatus || "In warehouse now"} · {records.length} item
-          {records.length === 1 ? "" : "s"}
+          {needsAttention
+            ? "Needs attention"
+            : activeStatus || "In warehouse now"}{" "}
+          · {records.length} item{records.length === 1 ? "" : "s"}
         </p>
 
         <div className="tabRow">
           <Link
             href="/board"
-            className={`tab ${!activeStatus ? "active" : ""}`}
+            className={`tab ${!activeStatus && !needsAttention ? "active" : ""}`}
           >
             In Warehouse Now
+          </Link>
+          <Link
+            href="/board?attention=1"
+            className={`tab ${needsAttention ? "active" : ""}`}
+            style={{ color: needsAttention ? undefined : "#C0392B" }}
+          >
+            Needs Attention
           </Link>
           {STATUS_CHOICES.map((s) => (
             <Link
               key={s.name}
               href={`/board?status=${encodeURIComponent(s.name)}`}
-              className={`tab ${activeStatus === s.name ? "active" : ""}`}
+              className={`tab ${!needsAttention && activeStatus === s.name ? "active" : ""}`}
             >
               {s.name}
             </Link>
@@ -73,13 +92,15 @@ export default async function BoardPage({ searchParams }) {
           const consignor = resolveNames(f[INVENTORY_FIELDS.consignor], consignorMap);
           const location = resolveNames(f[INVENTORY_FIELDS.location], locationMap);
           const status = f[INVENTORY_FIELDS.status];
+          const outcome = f[INVENTORY_FIELDS.inspectionOutcome];
           const c = statusColor(status, INVENTORY_STATUS_COLORS);
+          const oc = outcome ? INSPECTION_OUTCOME_COLORS[outcome] : null;
           return (
             <Link
               key={r.id}
               href={`/game/${r.id}`}
               className="card"
-              style={{ borderLeftColor: c.bar }}
+              style={{ borderLeftColor: oc ? oc.bar : c.bar }}
             >
               <div className="sku">{f[INVENTORY_FIELDS.sku] || "no sku"}</div>
               <div className="title">
@@ -92,6 +113,14 @@ export default async function BoardPage({ searchParams }) {
                 >
                   {status}
                 </span>
+                {oc && (
+                  <span
+                    className="statusPill"
+                    style={{ background: oc.bar, color: "#fff" }}
+                  >
+                    {outcome}
+                  </span>
+                )}
                 {consignor.length > 0 && <span>{consignor.join(", ")}</span>}
                 {location.length > 0 && <span>{location.join(", ")}</span>}
                 <span>{formatDate(f[INVENTORY_FIELDS.dateReceived])}</span>

@@ -13,6 +13,7 @@ import {
   resolveNames,
 } from "../../../lib/airtable";
 import { formatDate } from "../../../lib/format";
+import { INSPECTION_OUTCOME_COLORS } from "../../../lib/statusColors";
 
 export const dynamic = "force-dynamic";
 
@@ -63,12 +64,26 @@ export default async function GameDetailPage({ params }) {
         <Link
           href={`/game/${record.id}/inspect`}
           className={`btn ${f[INVENTORY_FIELDS.inspectionComplete] ? "secondary" : "flag"}`}
-          style={{ marginBottom: 20 }}
+          style={{ marginBottom: 10 }}
         >
           {f[INVENTORY_FIELDS.inspectionComplete]
             ? "Inspection complete — edit"
             : "Start inspection"}
         </Link>
+
+        {f[INVENTORY_FIELDS.inspectionOutcome] && (
+          <div style={{ marginBottom: 20 }}>
+            <span
+              className="statusPill"
+              style={{
+                background: INSPECTION_OUTCOME_COLORS[f[INVENTORY_FIELDS.inspectionOutcome]].bar,
+                color: "#fff",
+              }}
+            >
+              {f[INVENTORY_FIELDS.inspectionOutcome]}
+            </span>
+          </div>
+        )}
 
         <GameEditForm
           record={record}

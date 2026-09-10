@@ -71,13 +71,17 @@ export default async function DashboardPage() {
             Inventory
             <small>Browse & update games</small>
           </Link>
-          <Link href="/work-orders">
-            Work Orders
-            <small>All logged work</small>
+          <Link href="/board?attention=1">
+            Needs Attention
+            <small>Inspection flagged issues</small>
           </Link>
           <Link href="/work-orders/new">
             + New Work Order
             <small>Log work or flag a request</small>
+          </Link>
+          <Link href="/work-orders">
+            Work Orders
+            <small>All logged work</small>
           </Link>
           <Link href="/labels">
             Print Labels
