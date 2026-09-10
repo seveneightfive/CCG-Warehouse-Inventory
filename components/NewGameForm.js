@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { INVENTORY_FIELDS, SOURCE_TYPE_CHOICES } from "../lib/airtable";
 import { createGame, createCustomer, uploadGamePhoto } from "../lib/clientApi";
 import PhotoCapture from "./PhotoCapture";
+import VoiceTextarea from "./VoiceTextarea";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -222,10 +223,7 @@ export default function NewGameForm({ consignors, customers }) {
 
       <div className="field">
         <label>Description / notes</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+        <VoiceTextarea value={description} onChange={setDescription} />
       </div>
 
       {error && <p className="error">{error}</p>}

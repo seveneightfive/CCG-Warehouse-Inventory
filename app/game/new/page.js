@@ -31,7 +31,7 @@ export default async function NewGamePage() {
 
   return (
     <>
-      <TopBar backHref="/board" />
+      <TopBar title="Add a Game" backHref="/board" backLabel="Inventory" />
       <div className="content">
         <h1 className="pageTitle">Add a Game</h1>
         <p className="pageSub">

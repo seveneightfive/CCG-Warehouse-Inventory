@@ -26,7 +26,7 @@ export default async function WorkOrderDetailPage({ params }) {
 
   return (
     <>
-      <TopBar backHref="/work-orders" />
+      <TopBar title="Work Order" backHref="/work-orders" backLabel="Work Orders" />
       <div className="content">
         <div className="sku">{f[WORK_ORDER_FIELDS.woId]}</div>
         <h1 className="pageTitle">{game.join(", ") || "Work Order"}</h1>

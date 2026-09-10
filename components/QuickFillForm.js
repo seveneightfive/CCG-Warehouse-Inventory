@@ -6,6 +6,7 @@ import { INVENTORY_FIELDS, SOURCE_TYPE_CHOICES } from "../lib/airtable";
 import { patchRecord } from "../lib/clientApi";
 import { readWhoFromDocument } from "../lib/whoami";
 import PhotoCapture from "./PhotoCapture";
+import VoiceTextarea from "./VoiceTextarea";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -84,10 +85,7 @@ export default function QuickFillForm({ record, ownerLabel }) {
 
         <div className="field">
           <label>Notes (optional)</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
+          <VoiceTextarea value={description} onChange={setDescription} />
         </div>
 
         {error && <p className="error">{error}</p>}

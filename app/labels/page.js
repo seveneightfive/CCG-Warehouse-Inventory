@@ -38,7 +38,7 @@ export default async function LabelsPage() {
 
   return (
     <>
-      <TopBar backHref="/dashboard" />
+      <TopBar title="Print Labels" backHref="/dashboard" backLabel="Dashboard" />
       <div className="content">
         <h1 className="pageTitle">Print Labels</h1>
         <p className="pageSub">

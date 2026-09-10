@@ -46,7 +46,7 @@ export default async function GameDetailPage({ params }) {
   if (f[INVENTORY_FIELDS.placeholder]) {
     return (
       <>
-        <TopBar backHref="/labels/fill" backLabel="← Fill In Games" />
+        <TopBar title="New Game" backHref="/labels/fill" backLabel="Fill In Games" />
         <div className="content">
           <h1 className="pageTitle">New Game</h1>
           <p className="pageSub">This label hasn't been assigned to a game yet.</p>
@@ -67,7 +67,7 @@ export default async function GameDetailPage({ params }) {
 
   return (
     <>
-      <TopBar backHref="/board" backLabel="← Inventory" />
+      <TopBar title="Game Details" backHref="/board" backLabel="Inventory" />
       <div className="content">
         <div className="sku">{f[INVENTORY_FIELDS.sku]}</div>
         <h1 className="pageTitle">{f[INVENTORY_FIELDS.title]}</h1>

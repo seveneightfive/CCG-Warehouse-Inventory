@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 export default async function NewWorkOrderPage() {
   const [games, staff] = await Promise.all([
     listRecords(TABLES.inventory, {
-      filterByFormula: `{Status} != "Sold"`,
+      filterByFormula: `AND({Status} != "Sold", {Placeholder} != 1)`,
     }),
     listRecords(TABLES.staff),
   ]);
@@ -21,6 +21,7 @@ export default async function NewWorkOrderPage() {
     .map((g) => ({
       id: g.id,
       title: g.fields[INVENTORY_FIELDS.title] || "(untitled)",
+      sku: g.fields[INVENTORY_FIELDS.sku] || "",
     }))
     .sort((a, b) => a.title.localeCompare(b.title));
 
@@ -30,7 +31,7 @@ export default async function NewWorkOrderPage() {
 
   return (
     <>
-      <TopBar backHref="/work-orders" />
+      <TopBar title="New Work Order" backHref="/work-orders" backLabel="Work Orders" />
       <div className="content">
         <h1 className="pageTitle">New Work Order</h1>
         <p className="pageSub">

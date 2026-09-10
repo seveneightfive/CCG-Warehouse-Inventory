@@ -1,19 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap");
 
 :root {
-  /* Ad Astra: night sky navy, marquee teal, gold stars */
   --ink: #10131c;
-  --ink-soft: #545b6b;
+  --ink-soft: #5b6270;
   --paper: #ffffff;
   --surface: #f5f6f8;
+  --surface-2: #eef0f3;
   --line: #e1e3e8;
   --primary: #12798a;
   --primary-ink: #ffffff;
   --flag: #e7a93d;
   --flag-ink: #10131c;
-  --success: #5B3E96;
+  --success: #5b3e96;
+  --ready: #2f8f5b;
   --danger: #c0392b;
-  --radius: 6px;
+  --radius: 8px;
   --tap: 48px;
 }
 
@@ -64,39 +65,26 @@ textarea {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: var(--ink);
-  color: var(--paper);
-  padding: 10px 16px;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 12px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 3px solid var(--flag);
+  border-bottom: 1px solid var(--line);
 }
 
-.topbar .brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.topbar .brand img {
-  height: 26px;
-  width: auto;
-  display: block;
-}
-
-.topbar .storeName {
+.topbar .screenTitle {
   font-family: "Bebas Neue", sans-serif;
-  font-size: 20px;
-  letter-spacing: 0.03em;
-  line-height: 1;
+  font-size: 18px;
+  letter-spacing: 0.02em;
 }
 
 .topbar a.back {
-  color: var(--paper);
+  color: var(--primary);
   text-decoration: none;
   font-size: 14px;
-  opacity: 0.85;
+  font-weight: 600;
 }
 
 .content {
@@ -116,30 +104,85 @@ textarea {
   margin-bottom: 18px;
 }
 
-.tabRow {
+/* Stat cards */
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.statCard {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+
+.statCard .dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.statCard .label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.statCard .value {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 26px;
+  margin-top: 2px;
+}
+
+/* Pill filter bar */
+.pillRow {
   display: flex;
-  gap: 2px;
+  gap: 8px;
   overflow-x: auto;
-  border-bottom: 2px solid var(--line);
-  margin-bottom: 18px;
+  padding-bottom: 4px;
+  margin-bottom: 16px;
   -webkit-overflow-scrolling: touch;
 }
 
-.tab {
+.pill {
   flex: 0 0 auto;
-  padding: 11px 14px 10px;
-  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1.5px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  padding: 8px 13px;
+  border-radius: 999px;
+  font-size: 13px;
   font-weight: 600;
-  color: var(--ink-soft);
-  text-decoration: none;
   white-space: nowrap;
-  border-bottom: 3px solid transparent;
-  margin-bottom: -2px;
+  cursor: pointer;
+  text-decoration: none;
 }
 
-.tab.active {
-  color: var(--ink);
-  border-bottom-color: var(--primary);
+.pill.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.pill .count {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  padding: 1px 7px;
+  font-size: 11px;
+}
+
+.pill.active .count {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .card {
@@ -148,11 +191,10 @@ textarea {
   border: 1px solid var(--line);
   border-left: 6px solid var(--ink-soft);
   border-radius: var(--radius);
-  padding: 14px 16px;
-  margin-bottom: 12px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
   text-decoration: none;
   color: var(--ink);
-  box-shadow: 0 1px 2px rgba(16, 19, 28, 0.04);
 }
 
 .card.flagged {
@@ -164,27 +206,43 @@ textarea {
   border-left-color: var(--success);
 }
 
+.card .row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.card .thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex: 0 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
 .card .sku {
   font-family: "Bebas Neue", sans-serif;
-  font-size: 14px;
+  font-size: 12px;
   letter-spacing: 0.05em;
   color: var(--ink-soft);
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .card .title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   line-height: 1.25;
 }
 
 .card .meta {
-  font-size: 13.5px;
+  font-size: 13px;
   color: var(--ink-soft);
   display: flex;
   flex-wrap: wrap;
-  gap: 5px 12px;
+  gap: 5px 10px;
   align-items: center;
 }
 
@@ -270,7 +328,7 @@ textarea {
   width: calc(100% - 32px);
   max-width: 608px;
   z-index: 20;
-  box-shadow: 0 4px 16px rgba(16, 19, 28, 0.25);
+  box-shadow: 0 4px 16px rgba(16, 19, 28, 0.18);
 }
 
 .statusPill {
@@ -323,14 +381,8 @@ textarea {
   max-width: 320px;
 }
 
-.loginWrap .field input {
-  background: #1c2030;
-  border-color: #363b4d;
-  color: var(--paper);
-}
-
 .error {
-  color: #ff8a75;
+  color: var(--danger);
   font-size: 13px;
   margin-top: 8px;
 }
@@ -338,7 +390,7 @@ textarea {
 .navGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
   margin-top: 8px;
 }
 
@@ -347,11 +399,11 @@ textarea {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 20px 16px;
+  padding: 18px 14px;
   text-decoration: none;
   color: var(--ink);
   font-family: "Bebas Neue", sans-serif;
-  font-size: 18px;
+  font-size: 17px;
   letter-spacing: 0.02em;
 }
 
@@ -359,8 +411,40 @@ textarea {
   display: block;
   font-family: "Inter", sans-serif;
   font-weight: 400;
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--ink-soft);
-  margin-top: 5px;
+  margin-top: 4px;
   letter-spacing: 0;
+}
+
+.quickStatus select {
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: auto;
+}
+
+.micBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 6px;
+}
+
+.micBtn.listening {
+  background: var(--danger);
+  color: #fff;
+  border-color: var(--danger);
 }

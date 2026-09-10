@@ -6,6 +6,7 @@ import { INVENTORY_FIELDS, STATUS_CHOICES } from "../lib/airtable";
 import { patchRecord } from "../lib/clientApi";
 import { readWhoFromDocument } from "../lib/whoami";
 import PhotoCapture from "./PhotoCapture";
+import VoiceTextarea from "./VoiceTextarea";
 
 export default function GameEditForm({ record, locations }) {
   const router = useRouter();
@@ -83,10 +84,7 @@ export default function GameEditForm({ record, locations }) {
 
       <div className="field">
         <label>Notes / Description</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+        <VoiceTextarea value={description} onChange={setDescription} />
       </div>
 
       <button className="btn" type="submit" disabled={saving}>

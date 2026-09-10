@@ -28,7 +28,7 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <TopBar />
+      <TopBar title="Dashboard" />
       <div className="content">
         <h1 className="pageTitle">Boss Requests</h1>
         <p className="pageSub">
@@ -71,7 +71,7 @@ export default async function DashboardPage() {
             Inventory
             <small>Browse & update games</small>
           </Link>
-          <Link href="/board?attention=1">
+          <Link href="/board?filter=needs-attention">
             Needs Attention
             <small>Inspection flagged issues</small>
           </Link>
@@ -86,6 +86,10 @@ export default async function DashboardPage() {
           <Link href="/labels">
             Print Labels
             <small>QR sticker sheets</small>
+          </Link>
+          <Link href="/parts">
+            Parts & Supplies
+            <small>Stock & add new parts</small>
           </Link>
         </div>
       </div>

@@ -17,7 +17,7 @@ export default async function FillPrefixPage({ params }) {
 
   return (
     <>
-      <TopBar backHref="/labels/fill" backLabel="← Fill In Games" />
+      <TopBar title={prefix} backHref="/labels/fill" backLabel="Fill In Games" />
       <div className="content">
         <h1 className="pageTitle">{prefix}</h1>
         <p className="pageSub">

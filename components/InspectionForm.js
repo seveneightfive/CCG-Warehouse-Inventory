@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { INVENTORY_FIELDS, BRAND_CHOICES, INSPECTION_OUTCOME_CHOICES } from "../lib/airtable";
 import { patchRecord } from "../lib/clientApi";
 import { readWhoFromDocument } from "../lib/whoami";
+import VoiceTextarea from "./VoiceTextarea";
 
 export default function InspectionForm({ record }) {
   const router = useRouter();
@@ -122,11 +123,7 @@ export default function InspectionForm({ record }) {
 
       <div className="field">
         <label>Condition notes</label>
-        <textarea
-          value={conditionNotes}
-          onChange={(e) => setConditionNotes(e.target.value)}
-          placeholder="Wear, missing parts, anything worth flagging"
-        />
+        <VoiceTextarea value={conditionNotes} onChange={setConditionNotes} placeholder="Wear, missing parts, anything worth flagging" />
       </div>
 
       <div className="field">

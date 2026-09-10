@@ -34,7 +34,7 @@ export default async function FillIndexPage() {
 
   return (
     <>
-      <TopBar backHref="/labels" backLabel="← Labels" />
+      <TopBar title="Fill In Games" backHref="/labels" backLabel="Labels" />
       <div className="content">
         <h1 className="pageTitle">Fill In Games</h1>
         <p className="pageSub">Pick who these games came in from.</p>

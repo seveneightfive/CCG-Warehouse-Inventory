@@ -10,7 +10,7 @@ export default async function InspectPage({ params }) {
 
   return (
     <>
-      <TopBar backHref={`/game/${params.id}`} backLabel="← Game" />
+      <TopBar title="Inspection" backHref={`/game/${params.id}`} backLabel="Game" />
       <div className="content">
         <div className="sku">{f[INVENTORY_FIELDS.sku]}</div>
         <h1 className="pageTitle">Inspect: {f[INVENTORY_FIELDS.title]}</h1>

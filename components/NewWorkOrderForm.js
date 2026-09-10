@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { WORK_ORDER_FIELDS } from "../lib/airtable";
 import { createWorkOrder } from "../lib/clientApi";
 import { readWhoFromDocument } from "../lib/whoami";
+import VoiceTextarea from "./VoiceTextarea";
 
 export default function NewWorkOrderForm({ games, staff, isBoss }) {
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function NewWorkOrderForm({ games, staff, isBoss }) {
           <option value="">Select a game…</option>
           {games.map((g) => (
             <option key={g.id} value={g.id}>
-              {g.title}
+              {g.title}{g.sku ? ` — ${g.sku}` : ""}
             </option>
           ))}
         </select>
@@ -77,13 +78,7 @@ export default function NewWorkOrderForm({ games, staff, isBoss }) {
 
       <div className="field">
         <label>What needs to happen</label>
-        <textarea
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          placeholder="e.g. Check the marquee light, might be a bad ballast"
-          required
-          autoFocus
-        />
+        <VoiceTextarea value={notes} onChange={setNotes} placeholder="e.g. Check the marquee light, might be a bad ballast" />
       </div>
 
       <label
