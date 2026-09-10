@@ -37,7 +37,7 @@ function LoginForm() {
     <div className="loginWrap">
       <img
         className="loginLogo"
-        src="/capital-icon.png"
+        src="/CapitalIcon-White.png"
         alt="Capital City Games & Music"
       />
       <h1>Capital City Games & Music Inventory</h1>
