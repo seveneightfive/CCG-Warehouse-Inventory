@@ -2,6 +2,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
+function safeText(v) {
+  if (v == null) return "";
+  if (typeof v === "string" || typeof v === "number") return String(v);
+  if (typeof v === "object" && "name" in v) return String(v.name);
+  return "";
+}
+
 export default function SearchPage() {
   const [query, setQuery] = useState("");
   const [allRecords, setAllRecords] = useState([]);
@@ -10,14 +17,17 @@ export default function SearchPage() {
   useEffect(() => {
     fetch("/api/inventory")
       .then((res) => res.json())
-      .then((data) => setAllRecords(data.records || []))
+      .then((data) => {
+        const records = (data.records || []).filter((r) => !r.fields.Placeholder);
+        setAllRecords(records);
+      })
       .finally(() => setLoading(false));
   }, []);
 
   const results = query.trim()
     ? allRecords.filter((r) => {
         const f = r.fields;
-        const haystack = `${f.Title || ""} ${f.SKU || ""}`.toLowerCase();
+        const haystack = `${safeText(f.Title)} ${safeText(f.SKU)}`.toLowerCase();
         return haystack.includes(query.toLowerCase());
       })
     : [];
@@ -47,8 +57,8 @@ export default function SearchPage() {
       )}
       {results.map((r) => (
         <Link key={r.id} href={`/game/${r.id}`} className="card">
-          <div className="sku">{r.fields.SKU}</div>
-          <div className="title">{r.fields.Title}</div>
+          <div className="sku">{safeText(r.fields.SKU)}</div>
+          <div className="title">{safeText(r.fields.Title)}</div>
         </Link>
       ))}
     </div>
