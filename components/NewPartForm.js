@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PART_CATEGORY_CHOICES } from "../lib/airtable";
+import LocationCodePicker from "./LocationCodePicker";
 
 export default function NewPartForm() {
   const router = useRouter();
@@ -73,9 +74,9 @@ export default function NewPartForm() {
         <label>Purchased from</label>
         <input value={purchasedFrom} onChange={(e) => setPurchasedFrom(e.target.value)} />
       </div>
-      <div className="field">
+            <div className="field">
         <label>Storage location</label>
-        <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="e.g. Bin 4, shelf B" />
+        <LocationCodePicker value={location} onChange={setLocation} />
       </div>
       {error && <p className="error">{error}</p>}
       <button className="btn" type="submit" disabled={saving}>
