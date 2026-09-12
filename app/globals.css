@@ -40,23 +40,16 @@ body {
   border-right: 1px solid var(--line);
 }
 
-h1,
-h2,
-h3 {
+h1, h2, h3 {
   font-family: "Bebas Neue", sans-serif;
   font-weight: 400;
   letter-spacing: 0.02em;
   margin: 0;
 }
 
-a {
-  color: inherit;
-}
+a { color: inherit; }
 
-button,
-input,
-select,
-textarea {
+button, input, select, textarea {
   font-family: inherit;
   font-size: 16px;
 }
@@ -89,7 +82,7 @@ textarea {
 
 .content {
   padding: 18px 16px;
-  padding-bottom: 100px;
+  padding-bottom: 100px; /* clears the bottom nav */
 }
 
 .pageTitle {
@@ -104,7 +97,6 @@ textarea {
   margin-bottom: 18px;
 }
 
-/* Stat cards */
 .statRow {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -141,7 +133,6 @@ textarea {
   margin-top: 2px;
 }
 
-/* Pill filter bar */
 .pillRow {
   display: flex;
   gap: 8px;
@@ -253,9 +244,7 @@ textarea {
   font-size: 15px;
 }
 
-.field {
-  margin-bottom: 18px;
-}
+.field { margin-bottom: 18px; }
 
 .field label {
   display: block;
@@ -287,10 +276,7 @@ textarea {
   border-color: var(--primary);
 }
 
-.field textarea {
-  min-height: 100px;
-  resize: vertical;
-}
+.field textarea { min-height: 100px; resize: vertical; }
 
 .btn {
   display: inline-flex;
@@ -315,14 +301,11 @@ textarea {
   border: 1.5px solid var(--line);
 }
 
-.btn.flag {
-  background: var(--flag);
-  color: var(--flag-ink);
-}
+.btn.flag { background: var(--flag); color: var(--flag-ink); }
 
 .fab {
   position: fixed;
-  bottom: 20px;
+  bottom: 76px; /* sits above the bottom nav */
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 32px);
@@ -353,11 +336,7 @@ textarea {
   text-align: center;
 }
 
-.loginWrap img.loginLogo {
-  height: 84px;
-  width: auto;
-  margin-bottom: 22px;
-}
+.loginWrap img.loginLogo { height: 84px; width: auto; margin-bottom: 22px; }
 
 .loginWrap h1 {
   font-family: "Bebas Neue", sans-serif;
@@ -370,22 +349,10 @@ textarea {
   max-width: 320px;
 }
 
-.loginWrap p {
-  color: #b6bac3;
-  margin-bottom: 26px;
-  font-size: 14px;
-}
+.loginWrap p { color: #b6bac3; margin-bottom: 26px; font-size: 14px; }
+.loginWrap form { width: 100%; max-width: 320px; }
 
-.loginWrap form {
-  width: 100%;
-  max-width: 320px;
-}
-
-.error {
-  color: var(--danger);
-  font-size: 13px;
-  margin-top: 8px;
-}
+.error { color: var(--danger); font-size: 13px; margin-top: 8px; }
 
 .navGrid {
   display: grid;
@@ -443,8 +410,116 @@ textarea {
   margin-top: 6px;
 }
 
-.micBtn.listening {
-  background: var(--danger);
-  color: #fff;
-  border-color: var(--danger);
+.micBtn.listening { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+/* ---- Home screen: dark scope ---- */
+/* Wrap only the Home/dashboard page content in this class.
+   It overrides the shared tokens locally, so .card/.iconGrid/.pageSub/etc
+   all render dark here, and stay light everywhere else. */
+.homeDark {
+  --paper: #171d2e;
+  --surface: #1c2540;
+  --surface-2: #232d4d;
+  --line: #2b3559;
+  --ink: #f4f5f7;
+  --ink-soft: #9aa3b7;
+  background: #0d1220;
+  min-height: 100dvh;
 }
+
+.homeHeader {
+  padding: 36px 16px 24px;
+  text-align: center;
+}
+
+.homeHeader .homeLogo {
+  height: 56px;
+  width: auto;
+  margin-bottom: 10px;
+}
+
+.homeHeader h1 {
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+}
+
+.homeHeader .homeTagline {
+  color: var(--ink-soft);
+  font-size: 12.5px;
+  margin-top: 6px;
+  letter-spacing: 0.03em;
+}
+
+.searchBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  text-decoration: none;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.searchBtn small {
+  display: block;
+  font-weight: 400;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.iconGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.iconGrid a {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 14px;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.iconGrid .iconWrap { width: 34px; height: 34px; color: var(--primary); }
+.iconGrid .iconLabel { font-family: "Bebas Neue", sans-serif; font-size: 16px; letter-spacing: 0.02em; }
+.iconGrid .iconSub { font-size: 12px; color: var(--ink-soft); }
+
+/* ---- Bottom nav: always dark, on every page ---- */
+.bottomNav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  background: #10131c;
+  border-top: 1px solid #262c3d;
+  z-index: 30;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bottomNav a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 9px 4px 8px;
+  text-decoration: none;
+  color: #7d859a;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.bottomNav a svg { width: 22px; height: 22px; }
+.bottomNav a.active { color: #4fc3d9; }

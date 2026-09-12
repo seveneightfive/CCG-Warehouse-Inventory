@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import {
   listRecords,
   createRecord,
+  logTransaction,
   TABLES,
   WORK_ORDER_FIELDS,
 } from "../../../lib/airtable";
@@ -38,6 +39,24 @@ export async function POST(request) {
   try {
     const fields = await request.json();
     const record = await createRecord(TABLES.workOrders, fields);
+
+    const partIds = fields[WORK_ORDER_FIELDS.partsUsed] || [];
+    const staffIds = fields[WORK_ORDER_FIELDS.staff] || [];
+    for (const partId of partIds) {
+      try {
+        await logTransaction({
+          type: "Checked Out",
+          partId,
+          quantityChange: -1,
+          workOrderId: record.id,
+          staffId: staffIds[0],
+          notes: "Checked out for new work order",
+        });
+      } catch (logErr) {
+        console.error("Failed to log inventory transaction:", logErr);
+      }
+    }
+
     return NextResponse.json({ record });
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });

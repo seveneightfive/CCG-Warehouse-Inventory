@@ -1,15 +1,16 @@
-// Deliberately minimal: this app's data changes constantly, so we don't
-// cache API responses or pages. This file exists mainly to satisfy
-// "installable PWA" criteria so it can be added to a home screen.
+const SHELL_CACHE = "ccg-shell-v1";
+const SHELL_URLS = ["/", "/board", "/dashboard", "/manifest.json"];
 
-self.addEventListener("install", () => {
+self.addEventListener("install", (event) => {
+  event.waitUntil(caches.open(SHELL_CACHE).then((c) => c.addAll(SHELL_URLS)));
   self.skipWaiting();
 });
 
-self.addEventListener("activate", (event) => {
-  event.waitUntil(self.clients.claim());
-});
-
-self.addEventListener("fetch", () => {
-  // no-op: always go to the network
+self.addEventListener("fetch", (event) => {
+  const { request } = event;
+  if (request.method !== "GET") return; // never intercept writes
+  if (request.url.includes("/api/")) return; // let Dexie/network handle data
+  event.respondWith(
+    fetch(request).catch(() => caches.match(request))
+  );
 });

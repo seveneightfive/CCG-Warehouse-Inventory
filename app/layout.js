@@ -1,4 +1,5 @@
 import "./globals.css";
+import BottomNav from "../components/BottomNav";
 
 export const metadata = {
   title: "CCG Warehouse",
@@ -12,7 +13,7 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: "#10131c",
+  themeColor: "#0d1220",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -26,6 +27,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         {children}
+        <BottomNav />
         <script
           dangerouslySetInnerHTML={{
             __html: `
