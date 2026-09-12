@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { WORK_ORDER_FIELDS, WORK_ORDER_STATUS_CHOICES } from "../lib/airtable";
 import { patchRecord } from "../lib/clientApi";
 import { readWhoFromDocument } from "../lib/whoami";
 import VoiceTextarea from "./VoiceTextarea";
+
+const LABOR_RATE = 30;
+const PARTS_MARKUP = 1.2;
 
 export default function WorkOrderEditForm({ record, parts }) {
   const router = useRouter();
@@ -34,6 +37,14 @@ export default function WorkOrderEditForm({ record, parts }) {
 
   const isComplete = status === "Complete";
 
+  const estimate = useMemo(() => {
+    const laborCost = (Number(laborHours) || 0) * LABOR_RATE;
+    const partsCost = parts
+      .filter((p) => partIds.includes(p.id))
+      .reduce((sum, p) => sum + (Number(p.pricePerItem) || 0) * PARTS_MARKUP, 0);
+    return { laborCost, partsCost, total: laborCost + partsCost };
+  }, [laborHours, partIds, parts]);
+
   async function handleSave(e) {
     e.preventDefault();
     setSaving(true);
@@ -53,7 +64,7 @@ export default function WorkOrderEditForm({ record, parts }) {
         [WORK_ORDER_FIELDS.lastUpdatedBy]: who?.name || "",
       });
       setSaved(true);
-      router.refresh();
+      router.push("/work-orders");
     } finally {
       setSaving(false);
     }
@@ -135,6 +146,38 @@ export default function WorkOrderEditForm({ record, parts }) {
         </div>
       </div>
 
+      <div
+        style={{
+          background: "var(--surface)",
+          border: "1px solid var(--line)",
+          borderRadius: "var(--radius)",
+          padding: "12px 14px",
+          marginBottom: 18,
+          fontSize: 14,
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+          <span>Labor ({laborHours || 0} hrs × $30)</span>
+          <span>${estimate.laborCost.toFixed(2)}</span>
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+          <span>Parts (+20%)</span>
+          <span>${estimate.partsCost.toFixed(2)}</span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            fontWeight: 700,
+            borderTop: "1px solid var(--line)",
+            paddingTop: 6,
+          }}
+        >
+          <span>Estimated total</span>
+          <span>${estimate.total.toFixed(2)}</span>
+        </div>
+      </div>
+
       {isComplete && (
         <div
           style={{
@@ -171,7 +214,7 @@ export default function WorkOrderEditForm({ record, parts }) {
                 <input
                   type="number"
                   step="0.01"
-                  value={billAmount}
+                  value={billAmount || estimate.total.toFixed(2)}
                   onChange={(e) => setBillAmount(e.target.value)}
                 />
               </div>

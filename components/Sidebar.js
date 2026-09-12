@@ -2,7 +2,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const TABS = [
+const ITEMS = [
+  {
+    href: "/dashboard",
+    label: "Home",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M3 11l9-8 9 8" />
+        <path d="M5 10v10h14V10" />
+      </svg>
+    ),
+  },
   {
     href: "/search",
     label: "Search",
@@ -43,33 +53,26 @@ const TABS = [
       </svg>
     ),
   },
-  {
-    href: "/dashboard",
-    label: "More",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="5" cy="12" r="1.5" />
-        <circle cx="12" cy="12" r="1.5" />
-        <circle cx="19" cy="12" r="1.5" />
-      </svg>
-    ),
-  },
 ];
 
 const HIDDEN_ON = ["/", "/who"];
 
-export default function BottomNav() {
+export default function Sidebar() {
   const pathname = usePathname();
   if (HIDDEN_ON.includes(pathname)) return null;
 
   return (
-    <nav className="bottomNav">
-      {TABS.map((t) => {
-        const active = pathname === t.href || pathname.startsWith(t.href + "/");
+    <nav className="sidebar">
+      <div className="sidebarLogo">
+        <img src="/CapitalIcon-White.png" alt="" style={{ height: 22, width: "auto" }} />
+        Capital City
+      </div>
+      {ITEMS.map((item) => {
+        const active = pathname === item.href || pathname.startsWith(item.href + "/");
         return (
-          <Link key={t.href} href={t.href} className={active ? "active" : ""}>
-            {t.icon}
-            {t.label}
+          <Link key={item.href} href={item.href} className={active ? "active" : ""}>
+            {item.icon}
+            {item.label}
           </Link>
         );
       })}

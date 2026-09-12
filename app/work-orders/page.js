@@ -6,25 +6,21 @@ import { statusColor, WORK_ORDER_STATUS_COLORS } from "../../lib/statusColors";
 
 export const dynamic = "force-dynamic";
 
-const FILTERS = ["All", "Just Assigned", "In progress", "Delayed", "Complete"];
+const FILTERS = ["Just Assigned", "In progress", "Delayed", "Complete"];
 
 export default async function WorkOrdersPage({ searchParams }) {
-  const activeFilter = searchParams?.status || "All";
+  const activeFilter = searchParams?.status || "Just Assigned";
 
   const allRecords = await listRecords(TABLES.workOrders);
-  const counts = { All: allRecords.length };
-  FILTERS.slice(1).forEach((s) => {
+  const counts = {};
+  FILTERS.forEach((s) => {
     counts[s] = allRecords.filter(
       (r) => r.fields[WORK_ORDER_FIELDS.status] === s
     ).length;
   });
 
   const records = allRecords
-    .filter((r) =>
-      activeFilter === "All"
-        ? true
-        : r.fields[WORK_ORDER_FIELDS.status] === activeFilter
-    )
+    .filter((r) => r.fields[WORK_ORDER_FIELDS.status] === activeFilter)
     .sort((a, b) => {
       const da = a.fields[WORK_ORDER_FIELDS.date] || "";
       const db = b.fields[WORK_ORDER_FIELDS.date] || "";
@@ -41,7 +37,7 @@ export default async function WorkOrdersPage({ searchParams }) {
           {FILTERS.map((s) => (
             <Link
               key={s}
-              href={s === "All" ? "/work-orders" : `/work-orders?status=${encodeURIComponent(s)}`}
+              href={`/work-orders?status=${encodeURIComponent(s)}`}
               className={`pill ${activeFilter === s ? "active" : ""}`}
             >
               {s}

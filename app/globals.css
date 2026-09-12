@@ -523,3 +523,79 @@ button, input, select, textarea {
 
 .bottomNav a svg { width: 22px; height: 22px; }
 .bottomNav a.active { color: #4fc3d9; }
+
+/* ---- Desktop layout: sidebar instead of bottom nav ---- */
+.sidebar {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  body {
+    max-width: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  .bottomNav {
+    display: none;
+  }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 220px;
+    background: #10131c;
+    border-right: 1px solid #262c3d;
+    padding: 20px 0;
+    z-index: 30;
+  }
+
+  .sidebar .sidebarLogo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px 20px;
+    color: #fff;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    border-bottom: 1px solid #262c3d;
+    margin-bottom: 12px;
+  }
+
+  .sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 20px;
+    color: #9aa3b7;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .sidebar a svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+  }
+
+  .sidebar a.active {
+    color: #fff;
+    background: #1c2540;
+    border-right: 3px solid #1ea7c0;
+  }
+
+  .pageShell {
+    margin-left: 220px;
+    max-width: 1100px;
+  }
+
+  .content {
+    padding-bottom: 24px; /* no bottom nav to clear on desktop */
+  }
+}

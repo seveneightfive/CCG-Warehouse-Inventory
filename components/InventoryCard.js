@@ -53,7 +53,15 @@ export default function InventoryCard({
             <div className="title">{title || "(untitled)"}</div>
             <div className="meta">
               {consignorLine && <span>{consignorLine}</span>}
-              {locationLine && <span>{locationLine}</span>}
+              {locationLine && (
+  <span className="meta">
+    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: 3, verticalAlign: -2 }}>
+      <path d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </svg>
+    {locationLine}
+  </span>
+)}
             </div>
           </div>
         </div>

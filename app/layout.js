@@ -1,5 +1,6 @@
 import "./globals.css";
 import BottomNav from "../components/BottomNav";
+import Sidebar from "../components/Sidebar";
 
 export const metadata = {
   title: "CCG Warehouse",
@@ -26,7 +27,8 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" href="/capital-icon.png" />
       </head>
       <body>
-        {children}
+        <Sidebar />
+        <div className="pageShell">{children}</div>
         <BottomNav />
         <script
           dangerouslySetInnerHTML={{
