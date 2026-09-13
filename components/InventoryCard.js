@@ -23,6 +23,7 @@ export default function InventoryCard({
   const router = useRouter();
   const [currentStatus, setCurrentStatus] = useState(status);
   const [saving, setSaving] = useState(false);
+  const skuText = typeof sku === "string" ? sku : "";
 
   async function handleStatusChange(e) {
     const next = e.target.value;
@@ -49,7 +50,7 @@ export default function InventoryCard({
         <div className="row">
           <img src={thumbUrl || "/capital-icon.png"} alt="" className="thumb" />
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div className="sku">{sku || "no sku"}</div>
+            <div className="sku">{skuText || "no sku"}</div>
             <div className="title">{title || "(untitled)"}</div>
             <div className="meta">
               {consignorLine && <span>{consignorLine}</span>}

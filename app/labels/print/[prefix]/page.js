@@ -126,7 +126,13 @@ export default async function PrintLabelsPage({ params }) {
             <div className="label" key={l.id}>
               <img src={l.qr} alt="" />
               <div className="text">
-                <div className="name">{displayName}</div>
+                <div className="label" key={l.id}>
+  <img src={l.qr} alt="" />
+  <div className="text">
+    <div className="sku">{l.sku || `#${l.labelNumber}`}</div>
+    <div className="num">#{l.labelNumber}</div>
+  </div>
+</div>
                 <div className="num">#{l.labelNumber}</div>
               </div>
             </div>
